@@ -25,13 +25,13 @@
     --text:#2A2A3A;
     --muted:#6A7090;
   }
-  html,body{height:100%;background:var(--sky);font-family:'Nunito',sans-serif;color:var(--text);overflow:hidden}
-  #app{height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+  html,body{min-height:100%;background:var(--sky);font-family:'Nunito',sans-serif;color:var(--text);overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #app{min-height:100svh;display:flex;align-items:flex-start;justify-content:center;position:relative;padding:0.5rem 0}
 
   .bg-dot{position:absolute;border-radius:50%;opacity:0.18;animation:float linear infinite}
   @keyframes float{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.06)}100%{transform:translateY(0) scale(1)}}
 
-  .screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem;max-width:480px;width:100%;position:relative;z-index:1;max-height:100vh;overflow-y:auto}
+  .screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem calc(3rem + env(safe-area-inset-bottom));max-width:480px;width:100%;position:relative;z-index:1;min-height:100svh;overflow:visible}
   .screen.active{display:flex}
 
   .badge{display:inline-block;background:var(--purple-light);color:var(--purple);font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:1rem}
@@ -150,6 +150,42 @@
   .voucher-title{font-weight:800;font-size:0.88rem;color:var(--text)}
   .voucher-sub{font-size:0.74rem;color:var(--muted);line-height:1.35}
   .memory-note{font-family:'Lora',serif;font-style:italic;font-size:1rem;line-height:1.65;color:var(--text);background:var(--cream);border-left:4px solid var(--purple);padding:1rem;border-radius:14px;text-align:left;margin:1rem 0;width:100%}
+
+  /* Mobile scroll fix */
+  @supports (height: 100svh){
+    #app{min-height:100svh;height:auto}
+    .screen{min-height:100svh;max-height:none}
+  }
+  @media (max-width:600px){
+    html,body{
+      height:auto;
+      min-height:100%;
+      overflow-x:hidden;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    #app{
+      min-height:100svh;
+      height:auto;
+      align-items:flex-start;
+      padding-top:0.5rem;
+      padding-bottom:1rem;
+    }
+    .screen{
+      max-height:none;
+      min-height:100svh;
+      overflow:visible;
+      padding-top:1.4rem;
+      padding-bottom:calc(4.5rem + env(safe-area-inset-bottom));
+    }
+    .btn{
+      margin-bottom:1.2rem;
+    }
+    .reveal-photo{
+      max-height:170px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -386,7 +422,7 @@ Escape Room, Essen und noch ein paar kleine Extras — jetzt kommt die komplette
 <div style="margin-top:1rem;width:100%;display:flex;flex-direction:column;align-items:center">
 <div style="font-size:0.8rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem">🎴 Rubbelfeld — rein damit!</div>
 <div class="scratch-wrap">
-<div class="scratch-reveal" id="scratchReveal">🚗Auf einen spannenden Ausflug zu zweit - Levi🥳</div>
+<div class="scratch-reveal" id="scratchReveal">Auf einen gemütlichen Ausflug zu zweit - Levi</div>
 <canvas class="scratch-canvas" height="90" id="scratchCanvas" width="220"></canvas>
 </div>
 <div class="scratch-hint">Rubble über das graue Feld ☝️</div>
@@ -413,6 +449,7 @@ function updateProgress(n){
   });
 }
 function goTo(n){
+    window.scrollTo({top:0,behavior:'smooth'});
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active','fade-in')});
   const s=document.getElementById('s'+n);
   s.classList.add('active');
