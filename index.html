@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Für Eric 🕊️</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --sky:#E8F4FD;
+    --blue:#3A8FD5;
+    --blue-dark:#1A5F9A;
+    --gold:#E8A820;
+    --gold-light:#FFF0C0;
+    --gold-dark:#9A6A00;
+    --white:#FFFFFF;
+    --cream:#FFFDF7;
+    --soft:#F0F7FF;
+    --purple:#7B5EA7;
+    --purple-light:#EDE5F8;
+    --green:#3BAA72;
+    --green-light:#E3F7EE;
+    --text:#2A2A3A;
+    --muted:#6A7090;
+  }
+  html,body{height:100%;background:var(--sky);font-family:'Nunito',sans-serif;color:var(--text);overflow:hidden}
+  #app{height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+
+  .bg-dot{position:absolute;border-radius:50%;opacity:0.18;animation:float linear infinite}
+  @keyframes float{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.06)}100%{transform:translateY(0) scale(1)}}
+
+  .screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem;max-width:480px;width:100%;position:relative;z-index:1}
+  .screen.active{display:flex}
+
+  .badge{display:inline-block;background:var(--purple-light);color:var(--purple);font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:1rem}
+
+  .title-big{font-family:'Lora',serif;font-size:2.1rem;font-weight:600;color:var(--blue-dark);line-height:1.2}
+  .title-sub{font-size:0.95rem;color:var(--muted);margin-top:0.5rem;font-weight:400}
+
+  .env-outer{margin:1.5rem 0;cursor:pointer;position:relative}
+  .envelope{width:130px;height:96px;background:var(--white);border:2.5px solid var(--gold);border-radius:8px;position:relative;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 4px 0 var(--gold)}
+  .envelope:hover{transform:scale(1.07) rotate(2deg);box-shadow:0 6px 0 var(--gold)}
+  .envelope::before{content:'';position:absolute;top:0;left:0;right:0;border-top:52px solid transparent;border-left:65px solid var(--sky);border-right:65px solid var(--sky)}
+  .envelope::after{content:'';position:absolute;bottom:0;left:0;border-bottom:52px solid var(--gold-light);border-left:65px solid transparent;border-right:65px solid transparent;border-bottom-left-radius:6px;border-bottom-right-radius:6px}
+  .env-seal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(232,168,32,0.4)}
+
+  .btn{margin-top:1.5rem;padding:0.8rem 2.2rem;border:none;border-radius:99px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;letter-spacing:0.03em}
+  .btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-dark)}
+  .btn-blue:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--blue-dark)}
+  .btn-blue:active{transform:translateY(2px);box-shadow:0 2px 0 var(--blue-dark)}
+  .btn-gold{background:var(--gold);color:var(--gold-dark);box-shadow:0 4px 0 #A07000}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 0 #A07000}
+  .btn-gold:active{transform:translateY(2px);box-shadow:0 2px 0 #A07000}
+
+  .clue-card{background:var(--white);border:2px solid var(--blue);border-radius:18px;padding:1.4rem 1.6rem;margin:1.2rem 0;width:100%;box-shadow:0 4px 0 rgba(26,95,154,0.25)}
+  .clue-tag{font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:0.6rem}
+  .clue-text{font-family:'Lora',serif;font-style:italic;font-size:1.05rem;color:var(--text);line-height:1.7}
+
+  .guess-wrap{margin-top:1rem;width:100%;max-width:280px}
+  .guess-input{width:100%;background:var(--white);border:2px solid rgba(58,143,213,0.4);border-radius:99px;padding:0.6rem 1.2rem;font-size:1rem;font-family:'Nunito',sans-serif;text-align:center;outline:none;color:var(--text);transition:border-color 0.2s}
+  .guess-input:focus{border-color:var(--blue)}
+  .guess-input::placeholder{color:var(--muted)}
+  .error-msg{color:#D84040;font-size:0.82rem;font-weight:600;margin-top:0.5rem;min-height:1.2em}
+
+  .reveal-icon-big{font-size:3.8rem;margin-bottom:0.5rem;animation:pop 0.55s cubic-bezier(0.34,1.56,0.64,1) both}
+  @keyframes pop{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+  .reveal-title{font-family:'Lora',serif;font-size:1.9rem;font-weight:600;color:var(--blue-dark);margin-bottom:0.2rem}
+  .reveal-sub{font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}
+
+  .info-card{background:var(--white);border:2px solid var(--gold);border-radius:18px;padding:1.2rem 1.5rem;width:100%;text-align:left;box-shadow:0 3px 0 #C09000}
+  .info-row{display:flex;gap:10px;align-items:flex-start;padding:0.45rem 0;border-bottom:1px solid #F0EAD0}
+  .info-row:last-child{border-bottom:none;padding-bottom:0}
+  .info-emoji{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+  .info-label{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:2px}
+  .info-val{font-size:0.95rem;color:var(--text);font-weight:600}
+
+  .progress{display:flex;gap:7px;justify-content:center;margin-top:1.5rem}
+  .step{width:10px;height:10px;border-radius:50%;background:#D0E8F8;transition:background 0.3s,transform 0.3s}
+  .step.done{background:var(--blue);transform:scale(1.15)}
+
+  .star-row{font-size:1.6rem;letter-spacing:0.5rem;margin:0.8rem 0;color:var(--gold)}
+  .signature{color:var(--purple);font-size:0.85rem;font-weight:700;letter-spacing:0.08em}
+
+  .fade-in{animation:fadeIn 0.55s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  #confetti{position:fixed;top:0;left:0;pointer-events:none;z-index:99}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="bg-dot" style="width:180px;height:180px;background:#3A8FD5;top:5%;left:-4%;animation-duration:7s;animation-delay:0s"></div>
+<div class="bg-dot" style="width:120px;height:120px;background:#E8A820;top:70%;right:-2%;animation-duration:9s;animation-delay:1s"></div>
+<div class="bg-dot" style="width:80px;height:80px;background:#7B5EA7;top:40%;left:92%;animation-duration:6s;animation-delay:2s"></div>
+<div class="bg-dot" style="width:60px;height:60px;background:#3BAA72;top:85%;left:8%;animation-duration:8s;animation-delay:0.5s"></div>
+
+<div id="app">
+
+  <!-- Screen 0: Landing -->
+  <div class="screen active fade-in" id="s0">
+    <div class="badge">🕊️ Zur Firmung</div>
+    <div class="title-big">Hey Eric,<br>du hast Post!</div>
+    <div class="title-sub">Jemand hat dir eine ganz besondere<br>Überraschung vorbereitet ✨</div>
+    <div class="env-outer" onclick="goTo(1)">
+      <div class="envelope">
+        <div class="env-seal">🎁</div>
+      </div>
+    </div>
+    <div class="title-sub" style="font-size:0.85rem">Kuvert anklicken zum Öffnen</div>
+  </div>
+
+  <!-- Screen 1: Riddle -->
+  <div class="screen" id="s1">
+    <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
+      <div class="badge">🔍 Rätselzeit</div>
+      <div class="title-big">Bevor du dein<br>Geschenk siehst...</div>
+      <div class="title-sub">...musst du erst ein Rätsel lösen! 😄</div>
+      <div class="clue-card">
+        <div class="clue-tag">✦ Hinweis Nº 1</div>
+        <div class="clue-text">„Eine Stadt mit Festung hoch oben,<br>wo Mozart wurde hochgehoben.<br>Berühmt für Salz seit alter Zeit —<br>am Fluss liegt sie, voll Heiterkeit."</div>
+      </div>
+      <div class="guess-wrap">
+        <input class="guess-input" id="guessField" type="text" placeholder="Deine Antwort..." />
+        <div class="error-msg" id="errorMsg"></div>
+      </div>
+      <button class="btn btn-blue" onclick="checkGuess()">Überprüfen →</button>
+      <div class="progress">
+        <div class="step done"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Escape Room reveal -->
+  <div class="screen" id="s2">
+    <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
+      <div class="badge">🎉 Teil 1 enthüllt!</div>
+      <div class="reveal-icon-big">🔐</div>
+      <div class="reveal-title">Escape Room!</div>
+      <div class="reveal-sub">Salzburg · Abenteuer pur</div>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-emoji">📍</span>
+          <div><div class="info-label">Ort</div><div class="info-val">Salzburg — Escape Room</div></div>
+        </div>
+        <div class="info-row">
+          <span class="info-emoji">🧩</span>
+          <div><div class="info-label">Was dich erwartet</div><div class="info-val">Rätsel lösen, Türen öffnen, entkommen — gemeinsam!</div></div>
+        </div>
+        <div class="info-row">
+          <span class="info-emoji">🎊</span>
+          <div><div class="info-label">Wer kommt mit?</div><div class="info-val">Levi lädt dich ein 🙌</div></div>
+        </div>
+      </div>
+      <button class="btn btn-gold" onclick="goTo(3)">Aber das ist noch nicht alles... ✨</button>
+      <div class="progress">
+        <div class="step done"></div><div class="step done"></div><div class="step"></div><div class="step"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Dinner reveal -->
+  <div class="screen" id="s3">
+    <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
+      <div class="badge">🎉 Teil 2 enthüllt!</div>
+      <div class="reveal-icon-big">🍽️</div>
+      <div class="reveal-title">Dinner im Mojo!</div>
+      <div class="reveal-sub">Salzburg · Ein Abend für uns</div>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-emoji">📍</span>
+          <div><div class="info-label">Restaurant</div><div class="info-val">Mojo — Salzburg</div></div>
+        </div>
+        <div class="info-row">
+          <span class="info-emoji">🌙</span>
+          <div><div class="info-label">Was dich erwartet</div><div class="info-val">Entspanntes Abendessen nach dem Abenteuer</div></div>
+        </div>
+        <div class="info-row">
+          <span class="info-emoji">💰</span>
+          <div><div class="info-label">Wer zahlt?</div><div class="info-val">Ich — als Firmungsgeschenk! 🎁</div></div>
+        </div>
+      </div>
+      <button class="btn btn-blue" onclick="goTo(4)">Zur Überraschung →</button>
+      <div class="progress">
+        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 4: Final -->
+  <div class="screen" id="s4">
+    <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
+      <div style="font-size:3rem;margin-bottom:0.5rem;animation:pop 0.55s cubic-bezier(0.34,1.56,0.64,1) both">🕊️</div>
+      <div class="badge" style="background:var(--green-light);color:var(--green)">Herzlichen Glückwunsch zur Firmung, Eric!</div>
+      <div class="title-big" style="font-size:1.7rem;margin-top:0.5rem">Alles Liebe<br>für deinen Weg!</div>
+      <div class="title-sub" style="margin-top:0.8rem;max-width:320px;line-height:1.7">
+        Heute ist ein besonderer Tag für dich — und wir feiern ihn mit einem unvergesslichen Ausflug nach Salzburg. Ich freu mich riesig! 🎉
+      </div>
+      <div class="star-row">★ ★ ★</div>
+      <div class="signature">Mit viel Liebe · dein Bruder Levi 💙</div>
+      <div class="progress" style="margin-top:1.5rem">
+        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function goTo(n){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active','fade-in')});
+  const s=document.getElementById('s'+n);
+  s.classList.add('active');
+  void s.offsetWidth;
+  s.classList.add('fade-in');
+  if(n===4)launchConfetti();
+}
+
+function checkGuess(){
+  const val=document.getElementById('guessField').value.trim().toLowerCase();
+  const ok=['salzburg','salzkammergut'];
+  if(ok.some(a=>val.includes(a))){goTo(2)}
+  else{
+    const err=document.getElementById('errorMsg');
+    err.textContent='Fast! Denk an Mozart und die Festung 🏰';
+    document.getElementById('guessField').style.borderColor='#D84040';
+    setTimeout(()=>{err.textContent='';document.getElementById('guessField').style.borderColor=''},2800);
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('s1').classList.contains('active'))checkGuess();
+});
+
+function launchConfetti(){
+  const canvas=document.getElementById('confetti');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  const cols=['#3A8FD5','#E8A820','#7B5EA7','#3BAA72','#E87070','#fff','#FFF0C0'];
+  const pieces=Array.from({length:150},()=>({
+    x:Math.random()*canvas.width,y:-15,
+    r:Math.random()*6+3,
+    d:Math.random()*4+2.5,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    tiltAngle:Math.random()*Math.PI*2,
+    tiltSpeed:Math.random()*0.12+0.05,
+    shape:Math.random()>0.5?'circle':'rect',
+    opacity:1
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.tiltAngle+=p.tiltSpeed;
+      p.y+=p.d;
+      p.opacity-=0.003;
+      const tilt=Math.sin(p.tiltAngle)*10;
+      ctx.globalAlpha=Math.max(0,p.opacity);
+      ctx.fillStyle=p.color;
+      if(p.shape==='circle'){
+        ctx.beginPath();
+        ctx.ellipse(p.x+tilt,p.y,p.r,p.r*0.45,p.tiltAngle,0,Math.PI*2);
+        ctx.fill();
+      } else {
+        ctx.save();ctx.translate(p.x+tilt,p.y);ctx.rotate(p.tiltAngle);
+        ctx.fillRect(-p.r,-p.r*0.4,p.r*2,p.r*0.8);ctx.restore();
+      }
+    });
+    ctx.globalAlpha=1;
+    frame++;
+    if(frame<350)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
