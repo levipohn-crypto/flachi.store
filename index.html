@@ -149,7 +149,7 @@
   <!-- Screen 1: Riddle 1 -->
   <div class="screen" id="s1">
     <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
-      <div class="badge">🔍 Rätsel 1 von 2</div>
+      <div class="badge">🔍 Rätsel</div>
       <div class="title-big">Bevor du dein<br>Geschenk siehst...</div>
       <div class="title-sub">...musst du erst ein Rätsel lösen! 😄</div>
       <div class="clue-card">
@@ -162,7 +162,7 @@
       </div>
       <button class="btn btn-blue" onclick="checkGuess(1)">Überprüfen →</button>
       <div class="progress">
-        <div class="step done"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+        <div class="step done"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
       </div>
     </div>
   </div>
@@ -189,14 +189,15 @@
           <div><div class="info-label">Wer kommt mit?</div><div class="info-val">Levi lädt dich ein 🙌</div></div>
         </div>
       </div>
-      <button class="btn btn-gold" onclick="goTo(3)">Noch nicht alles... 👀</button>
+      <button class="btn btn-gold" onclick="goTo(4)">Weiter zum Dinner... 👀</button>
       <div class="progress">
-        <div class="step done"></div><div class="step done"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+        <div class="step done"></div><div class="step done"></div><div class="step"></div><div class="step"></div><div class="step"></div>
       </div>
     </div>
   </div>
 
-  <!-- Screen 4: Dinner reveal -->
+  
+  <!-- Screen 3: Dinner reveal -->
   <div class="screen" id="s4">
     <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
       <div class="badge">🎉 Station 2 enthüllt!</div>
@@ -220,12 +221,12 @@
       </div>
       <button class="btn btn-blue" onclick="goTo(6)">Noch eine Überraschung... ✨</button>
       <div class="progress">
-        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step"></div><div class="step"></div>
+        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step"></div><div class="step"></div>
       </div>
     </div>
   </div>
 
-  <!-- Screen 6: Bonus reveal — the day overview -->
+  <!-- Screen 4: Bonus reveal — the day overview -->
   <div class="screen" id="s6">
     <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
       <div class="badge" style="background:var(--green-light);color:var(--green)">🗓️ Dein Abenteuer-Tag</div>
@@ -252,12 +253,12 @@
       </div>
       <button class="btn btn-gold" onclick="goTo(7)">Zur großen Überraschung →</button>
       <div class="progress">
-        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div>
+        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step"></div>
       </div>
     </div>
   </div>
 
-  <!-- Screen 7: Final -->
+  <!-- Screen 5: Final -->
   <div class="screen" id="s7">
     <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;width:100%">
       <div style="font-size:3rem;margin-bottom:0.5rem;animation:pop 0.55s cubic-bezier(0.34,1.56,0.64,1) both">🕊️</div>
@@ -280,7 +281,7 @@
       <div class="star-row">★ ★ ★</div>
       <div class="signature">Mit viel Liebe · dein Bruder Levi 💙</div>
       <div class="progress" style="margin-top:1rem">
-        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div>
+        <div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step done"></div>
       </div>
     </div>
   </div>
@@ -301,8 +302,6 @@ function goTo(n){
 // Riddle checks
 const riddles = {
   1: { field:'guessField1', error:'errorMsg1', answers:['salzburg','salzkammergut'], hint:'Fast! Denk an Mozart und die Festung 🏰', next:2 },
-  2: { field:'guessField2', error:'errorMsg2', answers:['mojo'], hint:'4 Buchstaben, japanisch-modern 🍣', next:4 },
-
 };
 
 function checkGuess(n){
@@ -321,7 +320,6 @@ function checkGuess(n){
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'){
     if(document.getElementById('s1').classList.contains('active'))checkGuess(1);
-    if(document.getElementById('s3').classList.contains('active'))checkGuess(2);
   }
 });
 
